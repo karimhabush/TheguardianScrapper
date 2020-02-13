@@ -5,18 +5,18 @@ class TheguardianSpider(scrapy.Spider):
 	start_urls = ['https://www.theguardian.com/world/all']
 
 	def parse(self,response):
-		SET_SELECTOR='.fc-item__container'
+		SET_SELECTOR='//*[contains(@class,"fc-item__container")]'
 		
-		for article in response.css(SET_SELECTOR):
-			ARTICLE_URL_SELECTOR = 'a.fc-item__link ::attr(href)'
-			article_url = article.css(ARTICLE_URL_SELECTOR).extract_first()
+		for article in response.xpath(SET_SELECTOR):
+			ARTICLE_URL_SELECTOR = '//*[contains(@class,"fc-item__link")]//@href'
+			article_url = article.xpath(ARTICLE_URL_SELECTOR).extract_first()
 			yield scrapy.Request(
 				url = article_url,
 				callback=self.parsearticle
 			)
 
-		NEXT_PAGE_SELECTOR = 'a.pagination__action--static[rel="next"] ::attr(href)'
-		next_page = response.css(NEXT_PAGE_SELECTOR).extract_first()
+		NEXT_PAGE_SELECTOR = '//*[contains(@class,"pagination__action--static") and contains(@rel,"next")]//@href'
+		next_page = response.xpath(NEXT_PAGE_SELECTOR).extract_first()
 		if(next_page):
 			yield scrapy.Request(
 				response.urljoin(next_page),
