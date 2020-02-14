@@ -64,10 +64,12 @@ ROBOTSTXT_OBEY = True
 
 # Configure item pipelines
 # See https://docs.scrapy.org/en/latest/topics/item-pipeline.html
-#ITEM_PIPELINES = {
-#    'TheguardianScrapper.pipelines.TheguardianscrapperPipeline': 300,
-#}
+ITEM_PIPELINES = {
+    'TheguardianScrapper.pipelines.MongoPipeline': 300,
+}
 
+MONGO_URI = 'mongodb+srv://theguardian:8uLoM1p8xrlWKJvn@tgcluster-gjmtx.mongodb.net/test?retryWrites=true&w=majority'
+MONGO_DATABASE = 'Theguardian'
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
 #AUTOTHROTTLE_ENABLED = True
@@ -83,8 +85,8 @@ ROBOTSTXT_OBEY = True
 
 # Enable and configure HTTP caching (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
-#HTTPCACHE_ENABLED = True
+HTTPCACHE_ENABLED = True
 #HTTPCACHE_EXPIRATION_SECS = 0
-#HTTPCACHE_DIR = 'httpcache'
+HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
