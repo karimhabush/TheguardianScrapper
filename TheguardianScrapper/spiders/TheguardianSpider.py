@@ -1,15 +1,13 @@
 import scrapy
+from TheguardianScrapper.items import ArticleItem
 
 class TheguardianSpider(scrapy.Spider):
 	name = "theguardian"
 	start_urls = ['https://www.theguardian.com/world/all']
 
 	def parse(self,response):
-		SET_SELECTOR='//*[contains(@class,"fc-item__container")]'
-		
-		for article in response.xpath(SET_SELECTOR):
-			ARTICLE_URL_SELECTOR = '//*[contains(@class,"fc-item__link")]//@href'
-			article_url = article.xpath(ARTICLE_URL_SELECTOR).extract_first()
+		ARTICLE_URL_SELECTOR = '//*[contains(@class,"fc-item__link")]//@href'
+		for article_url in response.xpath(ARTICLE_URL_SELECTOR).extract():
 			yield scrapy.Request(
 				url = article_url,
 				callback=self.parsearticle
@@ -29,11 +27,16 @@ class TheguardianSpider(scrapy.Spider):
 		STANDFIRST_SELECTOR = '//*[contains(@class,"content__standfirst")]//p//text()'
 		AUTHOR_SELECTOR = '//*[contains(@rel,"author")]//*/text()'
 		LABEL_SELECTOR = '//*[contains(@class,"label__link-wrapper")]//text()'
-		yield {
-			'author' : response.xpath(AUTHOR_SELECTOR).extract(),
-			'headline' : response.xpath(HEADLINE_SELECTOR).extract_first(),
-			'content' : ''.join(response.xpath(CONTENT_SELECTOR).extract()),
-			'standfirst' : ''.join(response.xpath(STANDFIRST_SELECTOR).extract()),
-			'label' : response.xpath(LABEL_SELECTOR).extract(),
-			'url' : response.request.url
-		}
+		PUBLISHEDAT_SELECTOR = '//*[contains(@class,"content__dateline-wpd")]//@datetime'
+
+		item = ArticleItem()
+
+		item['author'] = response.xpath(AUTHOR_SELECTOR).extract()
+		item['headline']= response.xpath(HEADLINE_SELECTOR).extract_first()
+		item['content' ]= ''.join(response.xpath(CONTENT_SELECTOR).extract())
+		item['standfirst' ]= ''.join(response.xpath(STANDFIRST_SELECTOR).extract())
+		item['label' ]= response.xpath(LABEL_SELECTOR).extract()
+		item['url']=  response.request.url
+		item['published_at'] = response.xpath(PUBLISHEDAT_SELECTOR).extract_first()
+
+		yield item
