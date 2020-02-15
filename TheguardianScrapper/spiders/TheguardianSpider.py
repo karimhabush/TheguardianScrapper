@@ -22,6 +22,10 @@ class TheguardianSpider(scrapy.Spider):
 				)
 
 	def parsearticle(self,response):
+		# Test if the article is already crawled
+		if('cached' in response.flags):
+			return
+
 		HEADLINE_SELECTOR = '//*[contains(@itemprop,"headline")]//text()'
 		CONTENT_SELECTOR = '//*[contains(@class,"content__article-body")]//p//text()'
 		STANDFIRST_SELECTOR = '//*[contains(@class,"content__standfirst")]//p//text()'
