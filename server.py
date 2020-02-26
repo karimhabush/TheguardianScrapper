@@ -72,3 +72,25 @@ def search_headline():
     	mimetype='application/json'
 	)
 
+@app.route('/search/author')
+def search_author():
+	
+	query = request.args.get("query","")
+	query = query.replace(" ","|")
+	
+
+	page = int(request.args.get("page", "1"))
+	num_articles = int(request.args.get("num_articles","5"))
+	skips = num_articles * (page - 1 )
+
+	result = db.articles.find({"author" : {"$regex" : query,"$options":"ig"}}).limit(num_articles).skip(skips)
+	return Response(
+    	json_util.dumps({
+    		'status':'success',
+    		'page':page,
+    		'num_articles_found':result.count(), 
+    		'num_articles_per_page':num_articles, 
+    		'results' : result}),
+    	mimetype='application/json'
+	)
+
