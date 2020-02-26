@@ -68,7 +68,7 @@ ITEM_PIPELINES = {
     'TheguardianScrapper.pipelines.MongoPipeline': 300,
 }
 
-MONGO_URI = 'mongodb+srv://theguardian:8uLoM1p8xrlWKJvn@tgcluster-gjmtx.mongodb.net/test?retryWrites=true&w=majority'
+MONGO_URI = 'mongodb+srv://username:password@tgcluster-gjmtx.mongodb.net/test?retryWrites=true&w=majority'
 MONGO_DATABASE = 'Theguardian'
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
