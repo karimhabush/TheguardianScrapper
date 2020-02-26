@@ -1,5 +1,8 @@
-from flask import Flask, escape, request
+from flask import Flask, request, Response
 import pymongo
+from bson import json_util
+import json 
+
 
 app = Flask(__name__)
 
@@ -14,8 +17,16 @@ def articles():
     num_articles = int(request.args.get("num_articles","5"))
     skips = num_articles * (page - 1 )
     
-    result = str(list(db.articles.find().limit(num_articles).skip(skips)))
-    return result
+    result = db.articles.find().limit(num_articles).skip(skips)
+    return Response(
+    	json_util.dumps({
+    		'status':'success',
+    		'page':page,
+    		'num_articles_found':result.count(), 
+    		'num_articles_per_page':num_articles,
+    		'results' : result}),
+    	mimetype='application/json'
+	)
 
 @app.route('/search/content')
 def search_content():
@@ -27,8 +38,17 @@ def search_content():
 	num_articles = int(request.args.get("num_articles","5"))
 	skips = num_articles * (page - 1 )
 
-	result = str(list(db.articles.find({"content" : {"$regex" : query,"$options":"ig"}}).limit(num_articles).skip(skips)))
-	return result
+	result = db.articles.find({"content" : {"$regex" : query,"$options":"ig"}}).limit(num_articles).skip(skips)
+
+	return Response(
+    	json_util.dumps({
+    		'status':'success',
+    		'page':page,
+    		'num_articles_found':result.count(), 
+    		'num_articles_per_page':num_articles,
+    		'results' : result}),
+    	mimetype='application/json'
+	)
 
 @app.route('/search/headline')
 def search_headline():
@@ -41,5 +61,14 @@ def search_headline():
 	num_articles = int(request.args.get("num_articles","5"))
 	skips = num_articles * (page - 1 )
 
-	result = str(list(db.articles.find({"headline" : {"$regex" : query,"$options":"ig"}}).limit(num_articles).skip(skips)))
-	return result
+	result = db.articles.find({"headline" : {"$regex" : query,"$options":"ig"}}).limit(num_articles).skip(skips)
+	return Response(
+    	json_util.dumps({
+    		'status':'success',
+    		'page':page,
+    		'num_articles_found':result.count(), 
+    		'num_articles_per_page':num_articles, 
+    		'results' : result}),
+    	mimetype='application/json'
+	)
+
