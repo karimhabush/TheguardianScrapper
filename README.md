@@ -3,7 +3,7 @@ A Scrapy webscraper that can scrape and store articles of theguardian.com
 ## Installation
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install required libraries.
 ```bash
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 ## Usage
 To start scraping, make sure to create a cluster in [MongoDB Atlas](https://www.mongodb.com/cloud/atlas) and 
